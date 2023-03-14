@@ -1,0 +1,7 @@
+imageio~=2.9.0
+matplotlib~=3.5.1
+numpy~=1.19.5
+spacepy~=0.3.0
+astropy~=5.0
+scipy~=1.4.1
+pyvista~=0.38.3
