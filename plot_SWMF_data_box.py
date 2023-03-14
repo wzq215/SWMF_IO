@@ -17,7 +17,7 @@ k_b = 1.38e-23
 def Trace_in_box(data_box, src_radius=400, n_src_points=100):
     # r,lon,lat = np.array(data_shl['r']),np.deg2rad(np.array(data_shl['lon'])),np.deg2rad(np.array(data_shl['lat']))
     x, y, z = np.array(data_box['x']), np.array(data_box['y']), np.array(data_box['z'])
-    Bx, By, Bz = np.array(data_box['Bx']), np.array(data_box['By']), np.array(data_box['Bz'])
+    Bx, By, Bz = np.array(data_box['Ux']), np.array(data_box['Uy']), np.array(data_box['Uz'])
 
     xv, yv, zv = np.meshgrid(x, y, z, indexing='ij')
 
@@ -45,9 +45,9 @@ def Trace_in_box(data_box, src_radius=400, n_src_points=100):
 
 if __name__ == '__main__':
     # %%
-    data_path = '/Users/ephe/THL8/OH_THC/'
-    file_type = 'box_mhd_5_'
-    n_iter = 20000
+    data_path = '/Users/ephe/THL8/Test_Comet_2303/output_comet_161616_40_100_amrtest/GM/'
+    file_type = 'box_all_3_'
+    n_iter = 40
     n_time = None
 
     filename = file_type + 'n' + str(int(n_iter)).zfill(8)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     # var_str = 'Rho [amu/cc]'
     # plot_data = np.array(data_box['Rho'])
-    # plot_data[x<0.0]=0.0
+
     # plot_data = np.log10(plot_data)
 
     var_str = 'T [K]'
@@ -83,11 +83,14 @@ if __name__ == '__main__':
     # %%
     p = pyvista.Plotter()
 
-    vol = p.add_volume(box_grid, cmap='magma',
+    vol = p.add_volume_clip_plane(box_grid, cmap='magma',
                        clim=[1e2, 2e6],  # Change Colorbar
                        opacity=(0.1, 1., 0.5),  # Change Opacity Mask
                        opacity_unit_distance=500)  # 调整透明的程度
-    # vol.prop.interpolation_type='linear'
+    # vol = p.add_volume(box_grid, cmap='magma',
+    #                    clim=[1e-4, 1e-2],  # Change Colorbar
+    #                    opacity=(0., .5, 0.),  # Change Opacity Mask
+    #                    opacity_unit_distance=150)  # 调整透明的程度
 
     p.add_mesh(stream.tube(radius=1.), color='white')
 

@@ -86,7 +86,51 @@ def Trace_in_shl(data_shl,pos_target):
     p.show_grid()
     p.show()
 
+def Trace_in_box(data_box):
+    # r,lon,lat = np.array(data_shl['r']),np.deg2rad(np.array(data_shl['lon'])),np.deg2rad(np.array(data_shl['lat']))
+    x,y,z = np.array(data_box['x']),np.array(data_box['y']),np.array(data_box['z'])
+    Bx,By,Bz = np.array(data_box['Bx']),np.array(data_box['By']),np.array(data_box['Bz'])
 
+    xv,yv,zv = np.meshgrid(x,y,z,indexing='ij')
+    # rv,lonv,latv = np.meshgrid(r,lon,lat,indexing='ij')
+
+    # xv = rv*np.cos(lonv)*np.cos(latv)
+    # yv = rv*np.sin(lonv)*np.cos(latv)
+    # zv = rv*np.sin(latv)
+
+    # Br = (Bx*xv+By*yv+Bz*zv)/np.sqrt(xv**2+yv**2+zv**2)
+
+    # line = lines_from_points(pos_target)
+
+    mesh = pyvista.StructuredGrid(xv, yv, zv)
+
+    # mesh.point_data['values'] = Br.ravel(order='F')# also the active scalars
+    # isos_br = mesh.contour(isosurfaces=1, rng=[0., 0.])
+
+    vectors = np.empty((mesh.n_points, 3))
+    vectors[:, 0] = Bx.ravel(order='F')
+    vectors[:, 1] = By.ravel(order='F')
+    vectors[:, 2] = Bz.ravel(order='F')
+    mesh['vectors'] = vectors
+    streams = []
+    p = pyvista.Plotter()
+    # for i in range(len(pos_target)):
+    #     start_point = pos_target[i]
+        # stream = mesh.streamlines('vectors', progress_bar=True, start_position=start_point, return_source=False,
+        #                       integration_direction='both',
+        #                       max_time=100., max_error=1e-2)
+    stream, src = mesh.streamlines('vectors', return_source=True, source_radius=400, n_points=100,
+                                   progress_bar=True,
+                                   integration_direction='both', max_time=1000.)
+    streams.append(stream)
+    p.add_mesh(stream.tube(radius=.1),color='white')
+
+    # p.add_mesh(isos_br, opacity=1.)
+    # p.add_mesh(pyvista.Sphere(1))
+    # p.add_mesh(line.tube(radius=0.1), color='r')
+    p.show_grid()
+    p.show()
+    return stream
 
 
 
