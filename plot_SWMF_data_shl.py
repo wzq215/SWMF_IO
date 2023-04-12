@@ -78,7 +78,7 @@ def Trace_in_shl(data_shl,pos_target):
                               integration_direction='both',
                               max_time=100., max_error=1e-2)
         streams.append(stream)
-        p.add_mesh(stream.tube(radius=.1),color='white')
+        # p.add_mesh(stream.tube(radius=.1),color='white')
 
     p.add_mesh(isos_br, opacity=1.)
     p.add_mesh(pyvista.Sphere(1))
@@ -135,17 +135,18 @@ def Trace_in_box(data_box):
 
 
 if __name__ =='__main__':
-    data_path = '/Users/ephe/THL8/'
+    data_path = '/Users/ephe/THL8/Test_SC230315_2304/output_SCIH_6000SC/SC/'
     file_type = 'shl_mhd_3_n'
-    n_iter = 20000
+    n_iter = 100
     filename = file_type + str(int(n_iter)).zfill(8)
+    filename = 'shl_mhd_5_t00000040_n00000041'
     print('Reading File: ', filename)
     print('File Path: ', data_path+filename+'.out')
     data_shl = IdlFile(data_path + filename + '.out')
-    HCS_from_shl(data_shl)
-    # x_target=np.array([-4.3560391506522205,-4.514193566215196])
-    # y_target=np.array([12.63859893380682,12.56283681141047])
-    # z_target=np.array([-0.772212351144101,-0.7783066255753177])
-    # pos_target = np.array([x_target,y_target,z_target]).T
-    # print(pos_target.shape)
-    # Trace_in_shl(data_shl,pos_target)
+    # HCS_from_shl(data_shl)
+    x_target=np.array([34.11100479993646,30.20349439794439])
+    y_target=np.array([-9.724387083851413,-8.721135506369109])
+    z_target=np.array([1.5641191195150517,1.2014245530382486])
+    pos_target = np.array([x_target,y_target,z_target]).T
+    print(pos_target.shape)
+    Trace_in_shl(data_shl,pos_target)
