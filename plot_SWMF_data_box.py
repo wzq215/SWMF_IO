@@ -48,8 +48,10 @@ def Trace_in_box(data_box, src_radius=100, n_src_points=100):
 if __name__ == '__main__':
     # %%
     data_path = '/Users/ephe/THL8/OH_THC/'
-    file_type = 'box_mhd_5_'
-    n_iter = 20000
+    data_path = '/Users/ephe/THL8/Test_SC230315_2304/output_SC_230315/SC/'
+    data_path = '/Users/ephe/THL8/RayTracing/output_01/SC/'
+    file_type = 'box_mhd_4_'
+    n_iter = 5900
     n_time = None
 
     filename = file_type + 'n' + str(int(n_iter)).zfill(8)
@@ -92,8 +94,8 @@ if __name__ == '__main__':
                                    origin=origin)
     box_grid.point_data[var_str] = plot_data.ravel('F')
     # %%
-    stream_outer = Trace_in_box(data_box,src_radius=300.,n_src_points=50)
-    stream_inner = Trace_in_box(data_box,src_radius=10.,n_src_points=50)
+    # stream_outer = Trace_in_box(data_box,src_radius=15.,n_src_points=200)
+    stream_inner = Trace_in_box(data_box,src_radius=8.,n_src_points=200)
     # %%
     p = pyvista.Plotter()
 
@@ -106,23 +108,23 @@ if __name__ == '__main__':
                        opacity=(0., .5, 0.),  # Change Opacity Mask
                        opacity_unit_distance=150)  # 调整透明的程度
 
-    p.add_mesh(stream_outer.tube(radius=1.), color='green')
-    p.add_mesh(stream_inner.tube(radius=1.),color='silver')
+    # p.add_mesh(stream_outer.tube(radius=.05), color='green')
+    p.add_mesh(stream_inner.tube(radius=.05),color='silver')
 
-    # slices = box_grid.slice_orthogonal(x=0, y=0, z=0)
-    # p.add_mesh_slice_orthogonal(box_grid,cmap='jet',
-    #                             # clim=[-1.3e-7,-1e-7]
-    #                             clim=[-3e-11,3e-11]
-    #                             # clim=[0.00125,0.00126]
-    #                             # clim=[0.0,0.002]
-    #                             # clim=[7.5,8.6]
-    #                             # clim=[2.497,2.505]
-    #                             # clim=[2.504-0.0005,2.504+0.001],
-    #                             # clim=[0.00021,0.00028],
-    #                             # clim=[0.003,0.007]
-    #                             # clim=[-0.003,-0.001]
-    #                             # clim = [6.03,6.06]
-    #                             )
+    slices = box_grid.slice_orthogonal(x=0, y=0, z=0)
+    p.add_mesh_slice_orthogonal(box_grid,cmap='jet',
+                                # clim=[-1.3e-7,-1e-7]
+                                clim=[-3e-11,3e-11]
+                                # clim=[0.00125,0.00126]
+                                # clim=[0.0,0.002]
+                                # clim=[7.5,8.6]
+                                # clim=[2.497,2.505]
+                                # clim=[2.504-0.0005,2.504+0.001],
+                                # clim=[0.00021,0.00028],
+                                # clim=[0.003,0.007]
+                                # clim=[-0.003,-0.001]
+                                # clim = [6.03,6.06]
+                                )
     p.set_background("black")
     # p.add_title('Comet')
     p.show_grid()

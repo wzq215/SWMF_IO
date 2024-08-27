@@ -7,9 +7,12 @@ from spacepy.pybats import IdlFile
 
 # data_path = '/Users/ephe/THL8/Test_Comet_2303/output_comet_161616_realconst/GM/'
 data_path = '/Users/ephe/THL8/Test_SC230315_2304/output_SCIH_6000SC/SC/'
+data_path = '/Users/ephe/THL8/SC_multifluid_202312/output_231224/SC/'
+# data_path = '/Users/ephe/THL8/RayTracing/output_01/SC/'
 
-file_name = 'y=0_var_2_n'
-n_iters = np.linspace(100, 6000, 60)
+
+file_name = 'x=0_var_1_n'
+n_iters = np.linspace(100, 80000, 800)
 
 axes_str = 'xyz'
 cut_str = file_name[0]
@@ -17,9 +20,9 @@ axis1_str = axes_str.replace(cut_str,'')[0]
 axis2_str = axes_str.replace(cut_str,'')[1]
 print('Read data '+cut_str+'=0, plot on '+axis1_str+'O'+axis2_str+' plane...')
 
-test_data = IdlFile(data_path + '' + file_name + str(int(4000)).zfill(8) + '.out')
+test_data = IdlFile(data_path + '' + file_name + str(int(60000)).zfill(8) + '.out')
 var_list = list(test_data.keys())
-unit_list = test_data.meta['header'].split()[1:]
+unit_list = test_data.meta['header'].split()[0:]
 print('Variables: ', var_list)
 print('Units: ', unit_list)
 print('Supported derived variables: Btot [nT], U [km/s], SwU [km/s], HpU [km/s], H2OpU [km/s]')
@@ -35,8 +38,8 @@ if plot_var in var_list:
 else:
     if plot_var == 'Btot':
         plot_unit = 'nT'
-        plot_var_min = 2.765
-        plot_var_max = 2.777
+        plot_var_min = 1e-3
+        plot_var_max = 2.
         is_derived = True
     elif plot_var == 'SwU':
         plot_unit= 'km/s'
@@ -57,6 +60,11 @@ else:
         plot_unit = 'km/s'
         plot_var_min = np.nanmin(np.sqrt(test_data['Ux'] ** 2 + test_data['Uy'] ** 2 + test_data['Uz'] ** 2))
         plot_var_max = np.nanmax(np.sqrt(test_data['Ux'] ** 2 + test_data['Uy'] ** 2 + test_data['Uz'] ** 2))
+        is_derived = True
+    elif plot_var == 'He2pU':
+        plot_unit = 'km/s'
+        plot_var_min = np.nanmin(np.sqrt(test_data['He2pUx'] ** 2 + test_data['He2pUy'] ** 2 + test_data['He2pUz'] ** 2))
+        plot_var_max = np.nanmax(np.sqrt(test_data['He2pUx'] ** 2 + test_data['He2pUy'] ** 2 + test_data['He2pUz'] ** 2))
         is_derived = True
 
 print('Plot variable '+plot_var+', unit: '+plot_unit+'...')
@@ -91,6 +99,8 @@ for n_iter in n_iters:
             plot_data = np.sqrt(data_2d['HpUx']**2+data_2d['HpUy']**2+data_2d['HpUz']**2)
         elif plot_var=='H2OpU':
             plot_data = np.sqrt(data_2d['H2OpUx']**2+data_2d['H2OpUy']**2+data_2d['H2OpUz']**2)
+        elif plot_var == 'He2pU':
+            plot_data = np.sqrt(data_2d['He2pUx']**2+data_2d['He2pUy']**2+data_2d['He2pUz']**2)
     else:
         plot_data = data_2d[plot_var]
 
@@ -107,10 +117,12 @@ for n_iter in n_iters:
     plt.axis('equal')
     plt.xlabel(axis1_str+'['+unit_list[1]+']')
     plt.ylabel(axis2_str+'['+unit_list[2]+']')
+    # plt.xlim([-3.,3.])
+    # plt.ylim([-3.,3.])
     plt.savefig(data_path + plot_var + '_viz/' + plot_var + '_' + file_str + '.png')
     # plt.show()
     plt.close()
     frames.append(imageio.imread(data_path + plot_var + '_viz/' + plot_var + '_' + file_str + '.png'))
 print('Done with plot, generating movie...')
 print('Plots in '+data_path + plot_var + '_viz/' +' and movies in '+data_path  + 'movies/')
-imageio.mimsave(data_path  + 'movies/' + plot_var + '_' + file_str + '.mp4', frames, fps=4)
+imageio.mimsave(data_path  + 'movies/' + plot_var + '_' + file_str + '.gif', frames, fps=4)

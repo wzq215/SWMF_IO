@@ -78,7 +78,7 @@ def Trace_in_shl(data_shl,pos_target):
                               integration_direction='both',
                               max_time=100., max_error=1e-2)
         streams.append(stream)
-        # p.add_mesh(stream.tube(radius=.1),color='white')
+        p.add_mesh(stream.tube(radius=.1),color='white')
 
     p.add_mesh(isos_br, opacity=1.)
     p.add_mesh(pyvista.Sphere(1))
@@ -114,11 +114,11 @@ def Trace_in_box(data_box):
     mesh['vectors'] = vectors
     streams = []
     p = pyvista.Plotter()
-    # for i in range(len(pos_target)):
-    #     start_point = pos_target[i]
-        # stream = mesh.streamlines('vectors', progress_bar=True, start_position=start_point, return_source=False,
-        #                       integration_direction='both',
-        #                       max_time=100., max_error=1e-2)
+    for i in range(len(pos_target)):
+        start_point = pos_target[i]
+        stream = mesh.streamlines('vectors', progress_bar=True, start_position=start_point, return_source=False,
+                              integration_direction='both',
+                              max_time=100., max_error=1e-2)
     stream, src = mesh.streamlines('vectors', return_source=True, source_radius=400, n_points=100,
                                    progress_bar=True,
                                    integration_direction='both', max_time=1000.)
@@ -136,17 +136,18 @@ def Trace_in_box(data_box):
 
 if __name__ =='__main__':
     data_path = '/Users/ephe/THL8/Test_SC230315_2304/output_SCIH_6000SC/SC/'
-    file_type = 'shl_mhd_3_n'
-    n_iter = 100
+    data_path = '/Users/ephe/THL8/output_1015_001/SC/'
+    file_type = 'shl_mhd_4_n'
+    n_iter = 500
     filename = file_type + str(int(n_iter)).zfill(8)
-    filename = 'shl_mhd_5_t00000040_n00000041'
+    # filename = 'shl_mhd_5_t00000040_n00000041'
     print('Reading File: ', filename)
     print('File Path: ', data_path+filename+'.out')
     data_shl = IdlFile(data_path + filename + '.out')
     # HCS_from_shl(data_shl)
-    x_target=np.array([34.11100479993646,30.20349439794439])
-    y_target=np.array([-9.724387083851413,-8.721135506369109])
-    z_target=np.array([1.5641191195150517,1.2014245530382486])
+    x_target=np.array([-10.,-10.])
+    y_target=np.array([-10.,-10.])
+    z_target=np.array([1.,1.2])
     pos_target = np.array([x_target,y_target,z_target]).T
     print(pos_target.shape)
     Trace_in_shl(data_shl,pos_target)
