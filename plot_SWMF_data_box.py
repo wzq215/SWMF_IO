@@ -48,10 +48,11 @@ def Trace_in_box(data_box, src_radius=100, n_src_points=100):
 if __name__ == '__main__':
     # %%
     data_path = '/Users/ephe/THL8/OH_THC/'
-    data_path = '/Users/ephe/THL8/Test_SC230315_2304/output_SC_230315/SC/'
-    data_path = '/Users/ephe/THL8/RayTracing/output_01/SC/'
-    file_type = 'box_mhd_4_'
-    n_iter = 5900
+    # data_path = '/Users/ephe/THL8/Test_SC230315_2304/output_SC_230315/SC/'
+    # data_path = '/Users/ephe/THL8/RayTracing/output_01/SC/'
+    # data_path = '/Users/ephe/THL8/output_0207/SC/'
+    # file_type = 'box_mhd_4_'
+    n_iter = 6000
     n_time = None
 
     filename = file_type + 'n' + str(int(n_iter)).zfill(8)

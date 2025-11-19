@@ -9,6 +9,7 @@ from spacepy.pybats import IdlFile
 data_path = '/Users/ephe/THL8/Test_SC230315_2304/output_SCIH_6000SC/SC/'
 data_path = '/Users/ephe/THL8/SC_multifluid_202312/output_231224/SC/'
 # data_path = '/Users/ephe/THL8/RayTracing/output_01/SC/'
+data_path = ''
 
 
 file_name = 'x=0_var_1_n'

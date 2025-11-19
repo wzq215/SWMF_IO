@@ -27,7 +27,7 @@ def HCS_from_shl(data_shl):
     mesh['vectors'] = vectors
 
     p = pyvista.Plotter()
-    stream, src = mesh.streamlines('vectors', return_source=True, source_radius=6, n_points=100,
+    stream, src = mesh.streamlines('vectors', return_source=True, source_radius=25, n_points=200,
                                    progress_bar=True,
                                    max_time=50.)
     p.add_mesh(stream.tube(radius=0.05), color='white')
@@ -137,8 +137,9 @@ def Trace_in_box(data_box):
 if __name__ =='__main__':
     data_path = '/Users/ephe/THL8/Test_SC230315_2304/output_SCIH_6000SC/SC/'
     data_path = '/Users/ephe/THL8/output_1015_001/SC/'
-    file_type = 'shl_mhd_4_n'
-    n_iter = 500
+    data_path = '/Users/ephe/THL8/output_0207/SC/'
+    file_type = 'shl_mhd_3_n'
+    n_iter = 6000
     filename = file_type + str(int(n_iter)).zfill(8)
     # filename = 'shl_mhd_5_t00000040_n00000041'
     print('Reading File: ', filename)
@@ -150,4 +151,6 @@ if __name__ =='__main__':
     z_target=np.array([1.,1.2])
     pos_target = np.array([x_target,y_target,z_target]).T
     print(pos_target.shape)
-    Trace_in_shl(data_shl,pos_target)
+    # Trace_in_shl(data_shl,pos_target)
+    # %%
+    HCS_from_shl(data_shl)
