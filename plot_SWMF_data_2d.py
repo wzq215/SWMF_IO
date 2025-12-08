@@ -9,11 +9,11 @@ from spacepy.pybats import IdlFile
 data_path = '/Users/ephe/THL8/Test_SC230315_2304/output_SCIH_6000SC/SC/'
 data_path = '/Users/ephe/THL8/SC_multifluid_202312/output_231224/SC/'
 # data_path = '/Users/ephe/THL8/RayTracing/output_01/SC/'
-data_path = ''
+data_path = '/Users/ephe/THL8/output_251118/SC/'
 
 
 file_name = 'x=0_var_1_n'
-n_iters = np.linspace(100, 80000, 800)
+n_iters = np.linspace(100, 6000, 60)
 
 axes_str = 'xyz'
 cut_str = file_name[0]
@@ -21,7 +21,7 @@ axis1_str = axes_str.replace(cut_str,'')[0]
 axis2_str = axes_str.replace(cut_str,'')[1]
 print('Read data '+cut_str+'=0, plot on '+axis1_str+'O'+axis2_str+' plane...')
 
-test_data = IdlFile(data_path + '' + file_name + str(int(60000)).zfill(8) + '.out')
+test_data = IdlFile(data_path + '' + file_name + str(int(6000)).zfill(8) + '.out')
 var_list = list(test_data.keys())
 unit_list = test_data.meta['header'].split()[0:]
 print('Variables: ', var_list)

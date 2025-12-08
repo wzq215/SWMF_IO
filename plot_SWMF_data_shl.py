@@ -4,7 +4,7 @@ import numpy as np
 import pyvista
 from spacepy.pybats import IdlFile
 
-def HCS_from_shl(data_shl):
+def HCS_from_shl(data_shl,plotter=None):
     r,lon,lat = np.array(data_shl['r']),np.deg2rad(np.array(data_shl['lon'])),np.deg2rad(np.array(data_shl['lat']))
     Bx,By,Bz = np.array(data_shl['Bx']),np.array(data_shl['By']),np.array(data_shl['Bz'])
 
@@ -26,7 +26,10 @@ def HCS_from_shl(data_shl):
     vectors[:, 2] = Bz.ravel(order='F')
     mesh['vectors'] = vectors
 
-    p = pyvista.Plotter()
+    if plotter is None:
+        p = pyvista.Plotter()
+    else:
+        p = plotter
     stream, src = mesh.streamlines('vectors', return_source=True, source_radius=25, n_points=200,
                                    progress_bar=True,
                                    max_time=50.)
@@ -34,7 +37,7 @@ def HCS_from_shl(data_shl):
     p.add_mesh(isos_br, opacity=0.5)
     p.add_mesh(pyvista.Sphere(1))
     p.show_grid()
-    p.show()
+    # p.show()
 
 def lines_from_points(points):
     """Given an array of points, make a line set"""
@@ -138,8 +141,10 @@ if __name__ =='__main__':
     data_path = '/Users/ephe/THL8/Test_SC230315_2304/output_SCIH_6000SC/SC/'
     data_path = '/Users/ephe/THL8/output_1015_001/SC/'
     data_path = '/Users/ephe/THL8/output_0207/SC/'
+    data_path = '/Users/ephe/THL8/output_251124/SC/'
+    data_path = '/Users/ephe/THL8/output_1126/SC/'
     file_type = 'shl_mhd_3_n'
-    n_iter = 6000
+    n_iter = 60000
     filename = file_type + str(int(n_iter)).zfill(8)
     # filename = 'shl_mhd_5_t00000040_n00000041'
     print('Reading File: ', filename)
@@ -153,4 +158,20 @@ if __name__ =='__main__':
     print(pos_target.shape)
     # Trace_in_shl(data_shl,pos_target)
     # %%
-    HCS_from_shl(data_shl)
+    p = pyvista.Plotter()
+    HCS_from_shl(data_shl,plotter=p)
+    import pandas as pd
+    from utils import *
+    from datetime import datetime
+
+    sc_df = pd.read_csv('data/psp_E13_20220216_20220311.csv', index_col=0, parse_dates=['epoch_utc'])
+    beg_dt = datetime(2022, 2, 23, 0)
+    end_dt = datetime(2022, 2, 28, 23, 59, )
+    timebin = (sc_df.epoch_utc > beg_dt) * (sc_df.epoch_utc < end_dt)
+    sc_df = sc_df[timebin]
+
+    sc_orbit_mesh = rlonlat2line(sc_df['r_carr_Rs'], sc_df['lon_carr_deg'], sc_df['lat_carr_deg'])
+    p.add_mesh(sc_orbit_mesh.tube(radius=0.1), color='red')
+    p.show()
+
+
